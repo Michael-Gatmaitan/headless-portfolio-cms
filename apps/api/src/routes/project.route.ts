@@ -1,0 +1,15 @@
+import { Router } from "express";
+import { authenticate } from "../middleware/auth.middleware";
+import * as ProjectController from "../controllers/project.controller";
+
+const router = Router();
+
+router.use(authenticate);
+
+router.get("/", ProjectController.list);
+router.get("/:id", ProjectController.get);
+router.post("/", ProjectController.create);
+router.put("/:id", ProjectController.update);
+router.delete("/:id", ProjectController.remove);
+
+export default router;
