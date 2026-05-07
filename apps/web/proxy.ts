@@ -4,13 +4,21 @@ import { auth } from "./lib/auth";
 export async function proxy(req: NextRequest) {
   const session = await auth();
 
-  if (!session?.user.id) {
+  console.log(session);
+
+  if (!session?.user) {
     if (req.url.includes("/login")) return NextResponse.next();
+
+    console.log("Not logged in: Returning to /login");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (req.url.includes("/login"))
+  if (req.url.includes("/login")) {
+    console.log("Already logged in: Returning to /dashboard");
     return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  console.log("Already logged in: Calling next()");
 
   return NextResponse.next();
 }
