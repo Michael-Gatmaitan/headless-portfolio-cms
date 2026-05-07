@@ -15,6 +15,7 @@ export const projects = pgTable("projects", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   title: varchar("title", { length: 255 }).notNull(),
+  thumbnail: varchar("thumbnail", { length: 255 }),
   description: varchar("description", { length: 255 }).notNull(),
   url: varchar("url", { length: 255 }).notNull(),
   github: varchar("github", { length: 255 }).notNull(),

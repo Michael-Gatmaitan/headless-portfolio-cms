@@ -8,6 +8,7 @@ const createProjectSchema = z.object({
   description: z.string().min(1),
   url: z.string().min(1),
   github: z.string().min(1),
+  thumbnail: z.string().nullable(),
   dateRange: z.string().min(1),
 });
 
@@ -19,7 +20,7 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
     return;
   }
   const projects = await ProjectService.listProjects(req.userId);
-  res.json({ success: true, data: projects });
+  res.json(projects);
 }
 
 export async function get(req: AuthRequest, res: Response): Promise<void> {
@@ -47,9 +48,11 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
     res.status(201).json({ success: true, data: created });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({ success: false, error: "Validation failed", details: err.flatten().fieldErrors });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });
@@ -72,9 +75,11 @@ export async function update(req: AuthRequest, res: Response): Promise<void> {
     res.json({ success: true, data: updated });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({ success: false, error: "Validation failed", details: err.flatten().fieldErrors });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });

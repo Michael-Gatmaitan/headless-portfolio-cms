@@ -10,6 +10,7 @@ export interface Project {
   userId: string;
   title: string;
   description: string;
+  thumbnail: string | undefined;
   url: string;
   github: string;
   dateRange: string;

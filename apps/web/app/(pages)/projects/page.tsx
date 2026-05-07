@@ -1,9 +1,16 @@
-import React from 'react'
+import AddProjectDialog from "@/components/layout/projects/AddProjectDialog";
+import DisplayProjects from "@/components/layout/projects/DisplayProjects";
 
 const page = () => {
   return (
-    <div>Projects</div>
-  )
-}
+    <div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold">Update your projects</h1>
+        <AddProjectDialog />
+      </div>
+      <DisplayProjects />
+    </div>
+  );
+};
 
-export default page
+export default page;
