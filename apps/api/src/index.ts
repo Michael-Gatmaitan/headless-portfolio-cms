@@ -29,6 +29,10 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/awards", awardRoutes);
 
+app.get("/health-check", (_, res) => {
+  res.status(200).json({ message: "API is running successfully" });
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
 });
