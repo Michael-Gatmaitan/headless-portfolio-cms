@@ -1,0 +1,9 @@
+feat: refactor ImageKit upload logic
+
+- Extracted authentication and upload logic from `EditProjectForm` into a reusable helper `uploadProjectThumbnail` in `apps/web/lib/imagekit/index.ts`.
+- Updated `EditProjectForm` to import and use the new helper, simplifying the component and preserving existing behavior.
+- Removed direct ImageKit imports and related error handling from the component.
+- Added progress handling and toast notifications via the helper.
+- Ensured folder path construction remains consistent with user name sanitization.
+
+This change makes thumbnail uploads reusable across the project while keeping the UI behavior unchanged.

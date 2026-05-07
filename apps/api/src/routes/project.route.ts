@@ -12,4 +12,6 @@ router.post("/", ProjectController.create);
 router.put("/:id", ProjectController.update);
 router.delete("/:id", ProjectController.remove);
 
+// router.put("/:id/upload-thumbnail", ProjectController.uploadThumbnail);
+
 export default router;

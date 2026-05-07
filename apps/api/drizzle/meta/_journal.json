@@ -15,6 +15,13 @@
       "when": 1777191666520,
       "tag": "0001_redundant_rawhide_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777637810598,
+      "tag": "0002_curved_princess_powerful",
+      "breakpoints": true
     }
   ]
 }
