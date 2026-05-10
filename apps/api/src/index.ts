@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes";
 import projectRoutes from "./routes/project.route";
 import skillRoutes from "./routes/skill.route";
 import awardRoutes from "./routes/award.route";
+import { db } from "./db";
 
 dotenv.config();
 
@@ -29,7 +30,9 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/awards", awardRoutes);
 
-app.get("/health-check", (_, res) => {
+app.get("/health-check", async (_, res) => {
+  const users = await db.query.users.findMany();
+  console.log(users);
   res.status(200).json({ message: "API is running successfully" });
 });
 

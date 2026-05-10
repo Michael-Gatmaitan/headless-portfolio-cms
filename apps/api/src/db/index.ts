@@ -52,10 +52,12 @@ type DBClient = NodePgDatabase<typeof schema> | NeonHttpDatabase<typeof schema>;
 let db: DBClient;
 
 if (process.env.NODE_ENV === "development") {
+  console.log("DB proceeding in DEV mode");
   db = drizzleNode(pool, { schema });
 } else if (process.env.NODE_ENV === "production") {
+  console.log("DB proceeding in PROD mode");
   const sql = neon(process.env.DATABASE_URL!);
-  db = drizzleNeon({ client: sql });
+  db = drizzleNeon({ client: sql, schema });
 } else {
   db = drizzleNode(pool, { schema });
 }
