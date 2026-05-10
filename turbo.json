@@ -16,7 +16,12 @@
         "NODE_ENV",
         "IMAGEKIT_PUBLIC_KEY",
         "IMAGEKIT_PRIVATE_KEY",
-        "IMAGEKIT_URL_ENDPOINT"
+        "IMAGEKIT_URL_ENDPOINT",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "VERCEL",
+        "AUTH_SECRET",
+        "AUTH_URL"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
