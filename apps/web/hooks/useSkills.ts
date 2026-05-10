@@ -7,10 +7,10 @@ import { AxiosError } from "axios";
 
 export const useSkills = () => {
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   return useQuery<{ id: string; title: string }[]>({
-    queryKey: ["skills", userId],
+    queryKey: ["skills", userEmail],
     queryFn: async () => {
       try {
         const res = await getSkills();
@@ -23,7 +23,7 @@ export const useSkills = () => {
         throw err;
       }
     },
-    enabled: !!userId,
+    enabled: !!userEmail,
     retry: false,
   });
 };

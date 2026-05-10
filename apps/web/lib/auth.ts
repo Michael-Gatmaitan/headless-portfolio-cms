@@ -33,6 +33,8 @@ const nextAuth: NextAuthResult = NextAuth({
           const json = await res.json();
           if (!res.ok || !json.success) return null;
 
+          console.log("Login backend response: ", json);
+
           return {
             id: json.data.user.id,
             name: json.data.user.name,
@@ -48,6 +50,7 @@ const nextAuth: NextAuthResult = NextAuth({
   callbacks: {
     async jwt({ token, user, account }) {
       if (account?.provider === "google" && user) {
+        console.log("Signing in using google");
         try {
           const res = await fetch(`${API_URL}/api/auth/google`, {
             method: "POST",

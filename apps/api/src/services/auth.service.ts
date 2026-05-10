@@ -47,6 +47,7 @@ export async function loginWithGoogle(input: {
   email: string;
   name: string;
 }): Promise<AuthResponse> {
+  console.log("Login with google");
   let user = await findUserByEmail(input.email);
   if (!user) {
     user = await createUser({

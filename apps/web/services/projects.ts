@@ -2,6 +2,7 @@ import axios from "@/lib/axios";
 import { CreateProjectFormValues } from "@/lib/zod-schemas/projects-schema";
 
 export const getProjects = () => {
+  console.log("Fetching projects");
   return axios.get("/api/projects");
 };
 

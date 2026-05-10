@@ -14,10 +14,10 @@ import { Project } from "@portfolio-types/shared";
 
 export const useProjects = () => {
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   return useQuery<Project[]>({
-    queryKey: ["projects", userId],
+    queryKey: ["projects", userEmail],
     queryFn: async () => {
       try {
         const res = await getProjects();
@@ -30,7 +30,7 @@ export const useProjects = () => {
         throw err;
       }
     },
-    enabled: !!userId,
+    enabled: !!userEmail,
     retry: false,
   });
 };
@@ -42,12 +42,12 @@ export const useCreateProject = ({
 }) => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   return useMutation({
     mutationFn: (project: CreateProjectFormValues) => createProject(project),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      queryClient.invalidateQueries({ queryKey: ["projects", userEmail] });
       toast.success("Project created successfully");
       setOpen(false);
     },
@@ -61,13 +61,13 @@ export const useCreateProject = ({
 export const useEditProject = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: EditProjectFormValues }) =>
       updateProject(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      queryClient.invalidateQueries({ queryKey: ["projects", userEmail] });
       toast.success("Project updated successfully");
     },
     onError: () => {
