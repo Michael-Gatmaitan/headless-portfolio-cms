@@ -33,8 +33,10 @@ app.get("/health-check", (_, res) => {
   res.status(200).json({ message: "API is running successfully" });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Backend running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Backend running on http://localhost:${PORT}`);
+  });
+}
 
 export default app;
