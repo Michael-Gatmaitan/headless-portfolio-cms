@@ -15,7 +15,6 @@ export const createProject = (data: CreateProjectFormValues) => {
 };
 
 export const updateProject = (id: string, data: any) => {
-  console.log("Incoming data: ", data);
   return axios.put(`/api/projects/${id}`, data);
 };
 

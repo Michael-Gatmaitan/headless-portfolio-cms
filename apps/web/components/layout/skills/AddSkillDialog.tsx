@@ -1,0 +1,63 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Pencil, Plus } from "lucide-react";
+import { useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import AddSkillForm from "./AddSkillForm";
+import { Skill } from "@portfolio-types/shared";
+
+const AddSkillDialog = ({ skill }: { skill?: Skill }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          size={skill ? "sm" : "lg"}
+          variant={skill ? "outline" : "default"}
+          className="flex gap-2"
+        >
+          {skill ? <Pencil /> : <Plus />} {skill ? "Edit" : "Add"} Skill
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{skill ? "Edit" : "Add"} Skill</DialogTitle>
+          <DialogDescription>
+            {skill ? "Edit" : "Add"} your skills.
+          </DialogDescription>
+        </DialogHeader>
+
+        <ScrollArea className="max-h-[60vh] w-full pr-4 -mr-4 py-1">
+          <AddSkillForm
+            setOpen={setOpen}
+            mode={skill ? "edit" : "create"}
+            defaultValues={skill}
+          />
+        </ScrollArea>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit" form="add-skill">
+            {skill ? "Update" : "Add"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default AddSkillDialog;
