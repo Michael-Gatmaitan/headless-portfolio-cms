@@ -1,17 +1,16 @@
 "use client";
 
 import { useProjects } from "@/hooks/useProjects";
-import EmptyProjects from "./EmptyProjects";
 import Image from "next/image";
 import EditProjectDialog from "./EditProjectDialog";
 import Link from "next/link";
+import { Spinner } from "@/components/ui/spinner";
+import EmptyData from "@/components/EmptyData";
+import { FolderCodeIcon } from "lucide-react";
+import AddProjectDialog from "./AddProjectDialog";
 
 const DisplayProjects = () => {
   const { data: projects, isLoading, isError, error } = useProjects();
-
-  if (isLoading) {
-    return <div>Loading projects...</div>;
-  }
 
   if (isError) {
     return <div>Error loading projects: {error?.message}</div>;
@@ -19,6 +18,13 @@ const DisplayProjects = () => {
 
   return (
     <div className="mt-4">
+      {isLoading && !projects && (
+        <div className="flex items-center gap-2 justify-center w-full">
+          <Spinner />
+          Getting projects...
+        </div>
+      )}
+
       {projects && projects.length > 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-2">
           {projects.map((project) => (
@@ -61,7 +67,13 @@ const DisplayProjects = () => {
           ))}
         </div>
       ) : (
-        <EmptyProjects />
+        <EmptyData
+          title="No Projects Added"
+          description="You haven't added any projects yet. Get started by adding your first project information."
+          icon={FolderCodeIcon}
+        >
+          <AddProjectDialog />
+        </EmptyData>
       )}
     </div>
   );

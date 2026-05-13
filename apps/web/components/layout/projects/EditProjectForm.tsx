@@ -46,6 +46,21 @@ const EditProjectForm = ({
   const [progress, setProgress] = useState(0);
   const [uploaded, setUpdloaded] = useState<boolean>(false);
 
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      onChange(e.target.value);
+    }
+  };
+
   const handleUpload = async (): Promise<string | undefined | null> => {
     const fileInput = fileInputRef.current;
     if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
@@ -76,21 +91,6 @@ const EditProjectForm = ({
     return url;
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    onChange: (value: string) => void,
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-      onChange(e.target.value);
-    }
-  };
-
   const form = useForm<EditProjectFormValues>({
     resolver: zodResolver(editProjectSchema),
     defaultValues: {
@@ -106,7 +106,6 @@ const EditProjectForm = ({
   const { mutate: editProject } = useEditProject();
 
   const onSubmit = async (data: EditProjectFormValues) => {
-    const loadingToastId = toast.loading("Updating project...");
     const url = await handleUpload();
 
     const updatedData = {
@@ -119,11 +118,6 @@ const EditProjectForm = ({
       {
         onSuccess: () => {
           if (setOpen) setOpen(false);
-          console.log("Project edited Successfully:", updatedData);
-          toast.success("Project updated successfully", {
-            id: loadingToastId,
-          });
-          console.log(uploaded, progress);
           form.reset();
         },
       },

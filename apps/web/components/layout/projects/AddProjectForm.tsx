@@ -103,12 +103,10 @@ const AddProjectForm = ({
     },
   });
 
-  const { mutate: createProject } = useCreateProject({ setOpen });
+  const { mutate: createProject } = useCreateProject();
 
   const onSubmit = async (data: CreateProjectFormValues) => {
-    const loadingToastId = toast.loading("Adding project...");
     const url = await handleUpload();
-
     if (!url) {
       toast.error("Image upload failed");
       return;
@@ -119,10 +117,6 @@ const AddProjectForm = ({
     createProject(data, {
       onSuccess: () => {
         setOpen(false);
-        toast.success("Project added successfully", {
-          id: loadingToastId,
-        });
-        console.log(uploaded, progress);
         form.reset();
       },
     });
