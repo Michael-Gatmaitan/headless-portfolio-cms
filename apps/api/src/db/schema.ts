@@ -50,6 +50,7 @@ export const awards = pgTable("awards", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   title: varchar("title", { length: 255 }).notNull(),
+  thumbnail: varchar("thumbnail", { length: 255 }),
   shortDescription: varchar("short_description").notNull(),
   longDescription: varchar("long_description").notNull(),
   year: text("year").notNull(),

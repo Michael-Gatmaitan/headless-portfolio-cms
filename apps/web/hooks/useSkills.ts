@@ -22,7 +22,7 @@ export const useSkills = () => {
     queryFn: async () => {
       try {
         const res = await getSkills();
-        return res.data;
+        return res.data.data;
       } catch (err) {
         const error = err as AxiosError;
         if (error.response?.status === 401) {

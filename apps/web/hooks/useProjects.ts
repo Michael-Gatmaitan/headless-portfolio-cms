@@ -20,7 +20,7 @@ export const useProjects = () => {
     queryFn: async () => {
       try {
         const res = await getProjects();
-        return res.data;
+        return res.data.data;
       } catch (err) {
         const error = err as AxiosError;
         if (error.response?.status === 401) {

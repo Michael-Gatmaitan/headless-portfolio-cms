@@ -8,6 +8,7 @@ const createAwardSchema = z.object({
   shortDescription: z.string().min(1),
   longDescription: z.string().min(1),
   year: z.string().min(1),
+  thumbnail: z.string().optional().default(""),
   tags: z.array(z.string()).optional().default([]),
 });
 
@@ -19,6 +20,7 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
     return;
   }
   const awards = await AwardService.listAwards(req.userId);
+  console.log("AWARDS IN BACKEND: ", awards);
   res.json({ success: true, data: awards });
 }
 
@@ -47,13 +49,11 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
     res.status(201).json({ success: true, data: created });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: "Validation failed",
-          details: err.flatten().fieldErrors,
-        });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });
@@ -76,13 +76,11 @@ export async function update(req: AuthRequest, res: Response): Promise<void> {
     res.json({ success: true, data: updated });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: "Validation failed",
-          details: err.flatten().fieldErrors,
-        });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });

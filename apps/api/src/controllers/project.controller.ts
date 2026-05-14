@@ -25,7 +25,7 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
 
   console.log("List all projects: ", projects);
 
-  res.json(projects);
+  res.json({ success: true, data: projects });
 }
 
 export async function get(req: AuthRequest, res: Response): Promise<void> {

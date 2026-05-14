@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "../db";
 import { awards } from "../db/schema";
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -9,6 +9,7 @@ export type NewAward = InferInsertModel<typeof awards>;
 export async function listAwardsByUser(userId: string): Promise<Award[]> {
   return db.query.awards.findMany({
     where: eq(awards.userId, userId),
+    orderBy: desc(awards.createdAt),
   });
 }
 

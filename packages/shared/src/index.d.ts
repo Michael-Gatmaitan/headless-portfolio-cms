@@ -27,6 +27,7 @@ export interface Award {
   id: string;
   userId: string;
   title: string;
+  thumbnail: string | undefined;
   shortDescription: string;
   longDescription: string;
   year: string;

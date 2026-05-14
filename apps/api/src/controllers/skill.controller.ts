@@ -17,7 +17,7 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
   }
 
   const skills = await SkillService.listSkills(req.userId);
-  res.json(skills);
+  res.json({ success: true, data: skills });
 }
 
 export async function get(req: AuthRequest, res: Response): Promise<void> {
@@ -45,13 +45,11 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
     res.status(201).json({ success: true, data: created });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: "Validation failed",
-          details: err.flatten().fieldErrors,
-        });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });
@@ -74,13 +72,11 @@ export async function update(req: AuthRequest, res: Response): Promise<void> {
     res.json({ success: true, data: updated });
   } catch (err: any) {
     if (err?.name === "ZodError") {
-      res
-        .status(400)
-        .json({
-          success: false,
-          error: "Validation failed",
-          details: err.flatten().fieldErrors,
-        });
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
       return;
     }
     res.status(500).json({ success: false, error: "Internal server error" });
