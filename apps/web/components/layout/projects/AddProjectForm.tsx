@@ -129,8 +129,9 @@ const AddProjectForm = ({
       className="space-y-4"
     >
       <div className="relative w-fit">
+        <FieldLabel>Thumbnail Preview</FieldLabel>
         {preview ? (
-          <div className="relative aspect-video w-64 overflow-hidden rounded-lg border">
+          <div className="relative my-2 aspect-video w-64 overflow-hidden rounded-lg border">
             <Image
               src={preview}
               alt="Project preview"

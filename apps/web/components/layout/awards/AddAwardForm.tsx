@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import {
@@ -13,6 +13,9 @@ import { Award } from "@portfolio-types/shared";
 import { toast } from "sonner";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { uploadProjectThumbnail } from "@/lib/imagekit";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const AddAwardForm = ({
   mode,
@@ -23,6 +26,61 @@ const AddAwardForm = ({
   defaultValues?: Award;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const session = useSession();
+  const [preview, setPreview] = useState<string>(
+    defaultValues?.thumbnail || "",
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const abortController = new AbortController();
+  const [progress, setProgress] = useState(0);
+  const [uploaded, setUpdloaded] = useState<boolean>(false);
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void,
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      onChange(e.target.value);
+    }
+  };
+
+  const handleUpload = async () => {
+    // Access the file input element using the ref
+    const fileInput = fileInputRef.current;
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+      alert("Please select a file to upload");
+      return null;
+    }
+
+    // Extract the first file from the file input
+    const file = fileInput.files[0];
+    if (!file) return null;
+    if (!session.data?.user?.name) return null;
+
+    // Retrieve authentication parameters for the upload.
+    const url = await uploadProjectThumbnail({
+      file: file as File,
+      userName: session.data.user.name,
+      abortSignal: abortController.signal,
+      dir: "award-thumbnails",
+      onProgress: (percent) => setProgress(percent),
+    });
+
+    if (url) {
+      setUpdloaded(true);
+    } else {
+      setUpdloaded(false);
+    }
+
+    return url;
+  };
+
   const form = useForm({
     resolver: zodResolver(createAwardSchema),
     defaultValues: {
@@ -39,6 +97,15 @@ const AddAwardForm = ({
   const { mutateAsync: updateAward, isPending: isUpdating } = useUpdateAward();
 
   const onSubmit = async (data: CreateAwardFormValues) => {
+    if (!uploaded) {
+      const url = await handleUpload();
+      if (!url) {
+        toast.error("Image upload failed");
+        return;
+      }
+      data.thumbnail = url;
+    }
+
     if (mode === "create") {
       await createAward(data, {
         onSuccess: () => {
@@ -138,7 +205,47 @@ const AddAwardForm = ({
         )}
       />
 
-      <Controller
+      <div className="relative w-fit">
+        <FieldLabel>Thumbnail Preview</FieldLabel>
+        {preview ? (
+          <div className="relative my-2 aspect-video w-64 overflow-hidden rounded-lg border">
+            <Image
+              src={preview}
+              alt="Project preview"
+              fill
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <div className="flex my-2 aspect-video w-64 items-center justify-center rounded-lg border border-dashed bg-muted">
+            <p className="text-sm text-muted-foreground">No image selected</p>
+          </div>
+        )}
+        <Controller
+          name="thumbnail"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field>
+              <FieldLabel htmlFor={field.name}>Thumbnail</FieldLabel>
+              <Input
+                {...field}
+                type="file"
+                ref={fileInputRef}
+                id={field.name}
+                placeholder="Select image"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, field.onChange)}
+                aria-invalid={fieldState.invalid}
+                value={undefined}
+              />
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+      </div>
+
+      {/* <Controller
         control={form.control}
         name="thumbnail"
         render={({ field, fieldState }) => (
@@ -154,7 +261,7 @@ const AddAwardForm = ({
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
-      />
+      /> */}
 
       <Controller
         control={form.control}
@@ -166,14 +273,18 @@ const AddAwardForm = ({
           const addTag = () => {
             const trimmed = tagInput.trim();
             if (!trimmed) return;
-            const current: string[] = Array.isArray(field.value) ? field.value : [];
+            const current: string[] = Array.isArray(field.value)
+              ? field.value
+              : [];
             if (current.includes(trimmed)) return;
             field.onChange([...current, trimmed]);
             setTagInput("");
           };
 
           const removeTag = (tag: string) => {
-            const current: string[] = Array.isArray(field.value) ? field.value : [];
+            const current: string[] = Array.isArray(field.value)
+              ? field.value
+              : [];
             field.onChange(current.filter((t) => t !== tag));
           };
 
