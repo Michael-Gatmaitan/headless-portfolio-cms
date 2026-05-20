@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import {
@@ -13,7 +13,7 @@ import { Award } from "@portfolio-types/shared";
 import { toast } from "sonner";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { uploadProjectThumbnail } from "@/lib/imagekit";
+import { imageKitFolders, uploadImageToImageKit } from "@/lib/imagekit";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -21,10 +21,12 @@ const AddAwardForm = ({
   mode,
   defaultValues,
   setOpen,
+  setIsPending,
 }: {
   mode: "edit" | "create";
   defaultValues?: Award;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  setIsPending?: (pending: boolean) => void;
 }) => {
   const session = useSession();
   const [preview, setPreview] = useState<string>(
@@ -64,11 +66,11 @@ const AddAwardForm = ({
     if (!session.data?.user?.name) return null;
 
     // Retrieve authentication parameters for the upload.
-    const url = await uploadProjectThumbnail({
+    const url = await uploadImageToImageKit({
       file: file as File,
       userName: session.data.user.name,
       abortSignal: abortController.signal,
-      dir: "award-thumbnails",
+      dir: imageKitFolders.awards.thumbnail,
       onProgress: (percent) => setProgress(percent),
     });
 
@@ -95,6 +97,12 @@ const AddAwardForm = ({
 
   const { mutateAsync: createAward, isPending: isCreating } = useCreateAward();
   const { mutateAsync: updateAward, isPending: isUpdating } = useUpdateAward();
+
+  const isFormPending = form.formState.isSubmitting || isCreating || isUpdating;
+
+  useEffect(() => {
+    setIsPending?.(isFormPending);
+  }, [isFormPending, setIsPending]);
 
   const onSubmit = async (data: CreateAwardFormValues) => {
     if (!uploaded) {

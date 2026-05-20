@@ -1,5 +1,10 @@
 import AddSkillDialog from "@/components/layout/skills/AddSkillDialog";
 import DisplaySkills from "@/components/layout/skills/DisplaySkills";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Skills",
+};
 
 const page = () => {
   return (

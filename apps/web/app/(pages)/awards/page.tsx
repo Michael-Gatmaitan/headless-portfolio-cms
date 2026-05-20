@@ -1,6 +1,10 @@
 import AddAwardDialog from "@/components/layout/awards/AddAwardDialog";
 import DisplayAwards from "@/components/layout/awards/DisplayAwards";
-import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Awards",
+};
 
 const page = () => {
   return (
@@ -10,7 +14,6 @@ const page = () => {
         <AddAwardDialog />
       </div>
 
-      {/* Display awards */}
       <DisplayAwards />
     </div>
   );

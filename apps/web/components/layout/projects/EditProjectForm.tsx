@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   EditProjectFormValues,
@@ -22,16 +22,17 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import Image from "next/image";
-import { uploadProjectThumbnail } from "@/lib/imagekit";
+import { imageKitFolders, uploadImageToImageKit } from "@/lib/imagekit";
 import { useSession } from "next-auth/react";
-import { toast } from "sonner";
 
 const EditProjectForm = ({
   project,
   setOpen,
+  setIsPending,
 }: {
   project: Project;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPending?: (pending: boolean) => void;
 }) => {
   const session = useSession();
 
@@ -70,11 +71,11 @@ const EditProjectForm = ({
     if (!file) return null;
     if (!session.data?.user?.name) return null;
 
-    const url = await uploadProjectThumbnail({
+    const url = await uploadImageToImageKit({
       file: file as File,
       userName: session.data.user.name,
       abortSignal: abortController.signal,
-      dir: "project-thumbnails",
+      dir: imageKitFolders.projects.thumbnail,
       mode: {
         type: "edit",
         toReplace: project.thumbnail!,
@@ -103,7 +104,13 @@ const EditProjectForm = ({
     },
   });
 
-  const { mutate: editProject } = useEditProject();
+  const { mutate: editProject, isPending: isUpdating } = useEditProject();
+
+  const isFormPending = form.formState.isSubmitting || isUpdating;
+
+  useEffect(() => {
+    setIsPending?.(isFormPending);
+  }, [isFormPending, setIsPending]);
 
   const onSubmit = async (data: EditProjectFormValues) => {
     const url = await handleUpload();

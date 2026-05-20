@@ -20,7 +20,6 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
     return;
   }
   const awards = await AwardService.listAwards(req.userId);
-  console.log("AWARDS IN BACKEND: ", awards);
   res.json({ success: true, data: awards });
 }
 

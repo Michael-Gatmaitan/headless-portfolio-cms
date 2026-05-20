@@ -43,9 +43,6 @@ export async function updateProject(
     .where(and(eq(projects.userId, userId), eq(projects.id, id)))
     .returning();
 
-  console.log(data);
-
-  // console.log("Project edited successfully");
   return updated;
 }
 

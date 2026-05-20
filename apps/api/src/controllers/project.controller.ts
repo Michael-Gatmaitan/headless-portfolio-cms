@@ -15,16 +15,11 @@ const createProjectSchema = z.object({
 const updateProjectSchema = createProjectSchema.partial();
 
 export async function list(req: AuthRequest, res: Response): Promise<void> {
-  console.log("User id: ", req.userId);
-
   if (!req.userId) {
     res.status(401).json({ success: false, error: "Unauthorized" });
     return;
   }
   const projects = await ProjectService.listProjects(req.userId);
-
-  console.log("List all projects: ", projects);
-
   res.json({ success: true, data: projects });
 }
 

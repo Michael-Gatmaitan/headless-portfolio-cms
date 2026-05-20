@@ -15,6 +15,8 @@ import {
   FolderIcon,
   Wrench,
   Award,
+  Key,
+  TestTube,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -43,6 +45,16 @@ const items = [
     title: "Awards",
     url: "/awards",
     icon: Award,
+  },
+  {
+    title: "API Keys",
+    url: "/api-keys",
+    icon: Key,
+  },
+  {
+    title: "Testing",
+    url: "/testing",
+    icon: TestTube,
   },
 ];
 

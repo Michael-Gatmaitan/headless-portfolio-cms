@@ -24,7 +24,6 @@ export const useAwards = () => {
       try {
         const res = await getAwards();
 
-        console.log("AWARDS: ", res.data.data);
         return res.data.data;
       } catch (error) {
         if (error instanceof AxiosError) {

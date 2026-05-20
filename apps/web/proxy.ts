@@ -24,5 +24,6 @@ export const config = {
     "/projects/:path*",
     "/skills/:path*",
     "/awards/:path*",
+    "/api-keys/:path*",
   ],
 };

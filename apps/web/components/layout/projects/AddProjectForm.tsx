@@ -10,7 +10,7 @@ import {
   type CreateProjectFormValues,
 } from "@/lib/zod-schemas/projects-schema";
 import { Calendar } from "@/components/ui/calendar";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import {
   Popover,
@@ -25,12 +25,14 @@ import { Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { uploadProjectThumbnail } from "@/lib/imagekit";
+import { imageKitFolders, uploadImageToImageKit } from "@/lib/imagekit";
 
 const AddProjectForm = ({
   setOpen,
+  setIsPending,
 }: {
   setOpen: Dispatch<SetStateAction<boolean>>;
+  setIsPending?: (pending: boolean) => void;
 }) => {
   const session = useSession();
   const [date, setDate] = useState<DateRange | undefined>({
@@ -72,11 +74,11 @@ const AddProjectForm = ({
     if (!session.data?.user?.name) return null;
 
     // Retrieve authentication parameters for the upload.
-    const url = await uploadProjectThumbnail({
+    const url = await uploadImageToImageKit({
       file: file as File,
       userName: session.data.user.name,
       abortSignal: abortController.signal,
-      dir: "project-thumbnails",
+      dir: imageKitFolders.projects.thumbnail,
       onProgress: (percent) => setProgress(percent),
     });
 
@@ -103,7 +105,13 @@ const AddProjectForm = ({
     },
   });
 
-  const { mutate: createProject } = useCreateProject();
+  const { mutate: createProject, isPending: isCreating } = useCreateProject();
+
+  const isFormPending = form.formState.isSubmitting || isCreating;
+
+  useEffect(() => {
+    setIsPending?.(isFormPending);
+  }, [isFormPending, setIsPending]);
 
   const onSubmit = async (data: CreateProjectFormValues) => {
     const url = await handleUpload();

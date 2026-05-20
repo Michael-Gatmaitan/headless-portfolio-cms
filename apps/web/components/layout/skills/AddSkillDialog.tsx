@@ -19,6 +19,7 @@ import { Skill } from "@portfolio-types/shared";
 
 const AddSkillDialog = ({ skill }: { skill?: Skill }) => {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -44,15 +45,16 @@ const AddSkillDialog = ({ skill }: { skill?: Skill }) => {
             setOpen={setOpen}
             mode={skill ? "edit" : "create"}
             defaultValues={skill}
+            setIsPending={setIsPending}
           />
         </ScrollArea>
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" disabled={isPending}>Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="add-skill">
-            {skill ? "Update" : "Add"}
+          <Button type="submit" form="add-skill" disabled={isPending}>
+            {isPending ? "Saving..." : (skill ? "Update" : "Add")}
           </Button>
         </DialogFooter>
       </DialogContent>

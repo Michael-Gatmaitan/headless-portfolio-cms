@@ -8,6 +8,7 @@ import {
 } from "@/lib/zod-schemas/skills-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { SkillComboBox } from "./MultipleSkillItemCombobox";
 import { useCreateSkill, useSkills, useUpdateSkill } from "@/hooks/useSkills";
 import { Skill } from "@portfolio-types/shared";
@@ -18,10 +19,12 @@ const AddSkillForm = ({
   mode,
   defaultValues,
   setOpen,
+  setIsPending,
 }: {
   mode: "edit" | "create";
   defaultValues?: Skill;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  setIsPending?: (pending: boolean) => void;
 }) => {
   const form = useForm({
     resolver: zodResolver(createSkillSchema),
@@ -31,8 +34,14 @@ const AddSkillForm = ({
     },
   });
 
-  const { mutateAsync: createSkill } = useCreateSkill();
-  const { mutateAsync: updateSkill } = useUpdateSkill();
+  const { mutateAsync: createSkill, isPending: isCreating } = useCreateSkill();
+  const { mutateAsync: updateSkill, isPending: isUpdating } = useUpdateSkill();
+
+  const isFormPending = form.formState.isSubmitting || isCreating || isUpdating;
+
+  useEffect(() => {
+    setIsPending?.(isFormPending);
+  }, [isFormPending, setIsPending]);
 
   const onSubmit = async (data: CreateSkillFormValues) => {
     if (mode === "create") {
