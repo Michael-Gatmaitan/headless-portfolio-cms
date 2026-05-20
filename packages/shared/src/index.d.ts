@@ -56,6 +56,26 @@ export interface CreateAwardInput {
   tags: string[];
 }
 
+export interface ApiKey {
+  id: string;
+  userId: string;
+  name: string;
+  key: string;
+  keyHash: string;
+  keyPrefix: string;
+  updatedAt: string;
+  revokedAt?: string;
+  lastUsedAt?: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface ApiKeyResponseType {
+  data: ApiKey;
+  warning: string;
+  success: boolean;
+}
+
 // Auth Types
 export interface LoginInput {
   email: string;

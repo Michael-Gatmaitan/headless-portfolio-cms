@@ -43,11 +43,20 @@ interface UploadProjectThumbnailParams {
   onProgress?: (percent: number) => void;
 }
 
+export const imageKitFolders = {
+  projects: {
+    thumbnail: "projects/thumbnails",
+  },
+  awards: {
+    thumbnail: "awards/thumbnails",
+  },
+};
+
 /**
  * Uploads a project thumbnail to ImageKit.
  * Returns the URL of the uploaded image on success, otherwise null.
  */
-export const uploadProjectThumbnail = async ({
+export const uploadImageToImageKit = async ({
   file,
   userName,
   abortSignal,
@@ -57,7 +66,7 @@ export const uploadProjectThumbnail = async ({
 }: UploadProjectThumbnailParams): Promise<string | undefined | null> => {
   try {
     const { signature, expire, token, publicKey } = await getUploadAuth();
-    const folderName = `/users/${userName.replace(" ", "_")}/projects/${dir}/`;
+    const folderName = `/users/${userName.replace(" ", "_")}/${dir}/`;
 
     const uploadResponse = await upload({
       expire,

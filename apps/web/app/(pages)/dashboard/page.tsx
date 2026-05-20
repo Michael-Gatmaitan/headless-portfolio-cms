@@ -5,8 +5,6 @@ import { useSkills } from "@/hooks/useSkills";
 const Page = () => {
   const { data: skills = [], isLoading: skillsLoading } = useSkills();
 
-  console.log("skills: ", skills);
-
   return (
     <div>
       <h1>Dashboard</h1>

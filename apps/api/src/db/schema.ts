@@ -59,10 +59,25 @@ export const awards = pgTable("awards", {
   // Todo: Image placeholder
 });
 
+export const apiKeys = pgTable("api_keys", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(), // e.g. "My Portfolio Site"
+  keyHash: text("key_hash").notNull().unique(), // SHA-256 of the raw key
+  keyPrefix: varchar("key_prefix", { length: 12 }).notNull(), // first 8 chars for display (e.g. "pf_live_a")
+  lastUsedAt: timestamp("last_used_at"),
+  expiresAt: timestamp("expires_at"),
+  revokedAt: timestamp("revoked_at"), // soft delete
+  ...timestamps,
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   projects: many(projects),
   skills: many(skills),
   awards: many(awards),
+  apiKeys: many(apiKeys),
 }));
 
 export const projectsRelations = relations(projects, ({ one }) => ({
@@ -75,4 +90,8 @@ export const skillsRelations = relations(skills, ({ one }) => ({
 
 export const awardsRelations = relations(awards, ({ one }) => ({
   user: one(users, { fields: [awards.userId], references: [users.id] }),
+}));
+
+export const apiKeysRelations = relations(apiKeys, ({ one }) => ({
+  user: one(users, { fields: [apiKeys.userId], references: [users.id] }),
 }));

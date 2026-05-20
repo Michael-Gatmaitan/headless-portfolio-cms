@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AddProjectDialog = () => {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -35,15 +36,15 @@ const AddProjectDialog = () => {
         </DialogHeader>
 
         <ScrollArea className="max-h-[60vh] w-full pr-4 -mr-4 py-1">
-          <AddProjectForm setOpen={setOpen} />
+          <AddProjectForm setOpen={setOpen} setIsPending={setIsPending} />
         </ScrollArea>
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" disabled={isPending}>Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="add-project">
-            Add Project
+          <Button type="submit" form="add-project" disabled={isPending}>
+            {isPending ? "Creating..." : "Add Project"}
           </Button>
         </DialogFooter>
       </DialogContent>

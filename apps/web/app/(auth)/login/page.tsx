@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/hooks/useLogin";
 import { signIn } from "next-auth/react";
-import axios from "@/lib/axios";
 
 const LoginPage = () => {
   const { mutate: login, isPending } = useLogin();
@@ -86,6 +85,7 @@ const LoginPage = () => {
           {isPending ? "Signing in…" : "Sign In"}
         </Button>
         <Button
+          type="button"
           onClick={async () => {
             const result = await signIn("google", {
               callbackUrl: "/dashboard",

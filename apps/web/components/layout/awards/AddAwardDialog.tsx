@@ -19,6 +19,7 @@ import { Pencil, Plus } from "lucide-react";
 
 const AddAwardDialog = ({ award }: { award?: Award }) => {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -44,15 +45,16 @@ const AddAwardDialog = ({ award }: { award?: Award }) => {
             setOpen={setOpen}
             mode={award ? "edit" : "create"}
             defaultValues={award}
+            setIsPending={setIsPending}
           />
         </ScrollArea>
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" disabled={isPending}>Cancel</Button>
           </DialogClose>
-          <Button type="submit" form="add-award">
-            {award ? "Update" : "Add"}
+          <Button type="submit" form="add-award" disabled={isPending}>
+            {isPending ? "Saving..." : (award ? "Update" : "Add")}
           </Button>
         </DialogFooter>
       </DialogContent>
