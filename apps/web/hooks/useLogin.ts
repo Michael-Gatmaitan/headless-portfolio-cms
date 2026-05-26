@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "@/lib/axios";
 import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -34,3 +35,25 @@ export const useLogin = () => {
     },
   });
 };
+
+export const useSignup = () => {
+return useMutation({
+  mutationFn: async ({
+    name,
+    email,
+    password,
+  }: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    const result = await axios.post("/api/auth/signup", {
+      name,
+      email,
+      password,
+    });
+
+    console.log(result);
+  }
+})
+}

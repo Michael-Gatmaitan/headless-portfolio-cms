@@ -1,4 +1,5 @@
 import * as ProjectModel from "../models/project.model";
+import type { ReorderItemsInput } from "../schemas/reorderSchema";
 
 export async function listProjects(userId: string) {
   return ProjectModel.listProjectsByUser(userId);
@@ -25,4 +26,11 @@ export async function updateProject(
 
 export async function deleteProject(userId: string, id: string) {
   return ProjectModel.deleteProject(userId, id);
+}
+
+export async function reorderProjects(
+  userId: string,
+  items: ReorderItemsInput["items"],
+) {
+  return ProjectModel.reorderProjects(userId, items);
 }

@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import { Geist } from "next/font/google";
+import { DM_Sans, DM_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Providers from "@/components/providers/providers";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import AppSidebar from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+// import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AppNav from "@/components/app-nav";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -34,16 +33,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("font-sans", geist.variable)}
+      className={cn("font-sans", dmSans.variable, dmMono.variable)}
       suppressHydrationWarning
     >
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
         <SessionProvider>
           <Providers>
             <AppSidebar />
-            <div className="flex flex-col flex-1">
+            <div className="flex min-h-0 flex-1 flex-col">
               <AppNav />
-              <main className="px-4 py-2">{children}</main>
+              <main className="flex min-h-0 flex-1 flex-col px-4 py-2">
+                {children}
+              </main>
             </div>
           </Providers>
         </SessionProvider>

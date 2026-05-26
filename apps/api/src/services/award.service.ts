@@ -1,4 +1,5 @@
 import * as AwardModel from "../models/award.model";
+import type { ReorderItemsInput } from "../schemas/reorderSchema";
 
 export async function listAwards(userId: string) {
   return AwardModel.listAwardsByUser(userId);
@@ -25,4 +26,11 @@ export async function updateAward(
 
 export async function deleteAward(userId: string, id: string) {
   return AwardModel.deleteAward(userId, id);
+}
+
+export async function reorderAwards(
+  userId: string,
+  items: ReorderItemsInput["items"],
+) {
+  return AwardModel.reorderAwards(userId, items);
 }

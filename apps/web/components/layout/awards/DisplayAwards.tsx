@@ -1,24 +1,75 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import EmptyData from "@/components/EmptyData";
 import { Spinner } from "@/components/ui/spinner";
-import { useAwards } from "@/hooks/useAwards";
-import { Award } from "@portfolio-types/shared";
+import { useAwards, useReorderAwards } from "@/hooks/useAwards";
 import { FolderCodeIcon } from "lucide-react";
-import React from "react";
 import AddAwardDialog from "./AddAwardDialog";
-import DeleteAwardDialog from "./DeleteAwardDialog";
-import { Badge } from "@/components/ui/badge";
+import DraggableAwardCard from "./DraggableAwardCard";
+import { buildReorderPayloadFromVisualOrder } from "@/lib/sortOrder";
+import { reorderListById } from "@/lib/reorderList";
+import type { Award } from "@portfolio-types/shared";
 
 const DisplayAwards = () => {
   const { data: awards, isLoading, isError, error } = useAwards();
+  const reorderMutation = useReorderAwards();
+  const [orderedAwards, setOrderedAwards] = useState<Award[]>([]);
+  const orderedAwardsRef = useRef<Award[]>([]);
+  const dragStartIndexRef = useRef<number | null>(null);
 
-  if (isLoading) {
-    return <div>Loading skills...</div>;
-  }
+  useEffect(() => {
+    if (awards) {
+      setOrderedAwards(awards);
+      orderedAwardsRef.current = awards;
+    }
+  }, [awards]);
+
+  const moveAward = useCallback((dragIndex: number, hoverIndex: number) => {
+    setOrderedAwards((prev) => {
+      const next = [...prev];
+      const [removed] = next.splice(dragIndex, 1);
+      next.splice(hoverIndex, 0, removed!);
+      orderedAwardsRef.current = next;
+      return next;
+    });
+  }, []);
+
+  const handleDragStart = useCallback((itemId: string) => {
+    dragStartIndexRef.current = orderedAwardsRef.current.findIndex(
+      (award) => award.id === itemId,
+    );
+  }, []);
+
+  const handleDragEnd = useCallback(
+    (itemId: string, finalIndex: number) => {
+      const fromIndex = dragStartIndexRef.current;
+      dragStartIndexRef.current = null;
+
+      if (fromIndex === null || fromIndex === finalIndex || !awards) return;
+
+      const aligned =
+        reorderListById(orderedAwardsRef.current, itemId, finalIndex) ??
+        orderedAwardsRef.current;
+
+      orderedAwardsRef.current = aligned;
+      setOrderedAwards(aligned);
+
+      const payload = buildReorderPayloadFromVisualOrder(aligned);
+      reorderMutation.mutate(payload, {
+        onError: () => {
+          setOrderedAwards(awards);
+          orderedAwardsRef.current = awards;
+        },
+      });
+    },
+    [awards, reorderMutation],
+  );
 
   if (isError) {
-    return <div>Error loading skills: {error?.message}</div>;
+    return <div>Error loading awards: {error?.message}</div>;
   }
 
   return (
@@ -30,49 +81,35 @@ const DisplayAwards = () => {
         </div>
       )}
 
-      {awards && awards.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
-          {awards.map((award) => (
-            <AwardCard key={award.id} award={award} />
-          ))}
-        </div>
+      {orderedAwards.length > 0 ? (
+        <DndProvider backend={HTML5Backend}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2">
+            {orderedAwards.map((award, index) => (
+              <DraggableAwardCard
+                key={award.id}
+                award={award}
+                index={index}
+                moveAward={moveAward}
+                onDragStart={() => handleDragStart(award.id)}
+                onDragEnd={handleDragEnd}
+              />
+            ))}
+          </div>
+          {reorderMutation.isPending && (
+            <p className="mt-2 text-sm text-muted-foreground">Saving order...</p>
+          )}
+        </DndProvider>
       ) : (
-        <EmptyData
-          title="No Skills Added"
-          description="You haven't added any skills yet. Get started by adding your first skill information."
-          icon={FolderCodeIcon}
-        >
-          <AddAwardDialog />
-        </EmptyData>
+        !isLoading && (
+          <EmptyData
+            title="No Awards Added"
+            description="You haven't added any awards yet. Get started by adding your first award."
+            icon={FolderCodeIcon}
+          >
+            <AddAwardDialog />
+          </EmptyData>
+        )
       )}
-    </div>
-  );
-};
-
-const AwardCard = ({ award }: { award: Award }) => {
-  return (
-    <div className="rounded-lg border p-4 space-y-2">
-      <div className="space-y-1">
-        <div className="flex items-center justify-between">
-          <h3 className="font-medium text-lg">{award.title}</h3>
-        </div>
-        <p className="text-muted-foreground text-sm">
-          {award.shortDescription}
-        </p>
-        <p className="text-muted-foreground text-sm">{award.year}</p>
-
-        <div className="flex flex-wrap justify-start gap-1">
-          {award.tags.map((tag) => (
-            <Badge key={`${award.id}-${tag}`} variant="outline">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </div>
-      <div className="flex items-center gap-1">
-        <AddAwardDialog award={award} />
-        <DeleteAwardDialog award={award} />
-      </div>
     </div>
   );
 };

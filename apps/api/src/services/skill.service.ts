@@ -1,4 +1,5 @@
 import * as SkillModel from "../models/skill.model";
+import type { ReorderItemsInput } from "../schemas/reorderSchema";
 
 export async function listSkills(userId: string) {
   return SkillModel.listSkillsByUser(userId);
@@ -25,4 +26,11 @@ export async function updateSkill(
 
 export async function deleteSkill(userId: string, id: string) {
   return SkillModel.deleteSkill(userId, id);
+}
+
+export async function reorderSkills(
+  userId: string,
+  items: ReorderItemsInput["items"],
+) {
+  return SkillModel.reorderSkills(userId, items);
 }

@@ -7,6 +7,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get("/", AwardsController.list);
+router.put("/reorder", AwardsController.reorder);
 router.get("/:id", AwardsController.get);
 router.post("/", AwardsController.create);
 router.put("/:id", AwardsController.update);

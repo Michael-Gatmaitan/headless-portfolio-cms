@@ -2,6 +2,7 @@ import type { Response } from "express";
 import { z } from "zod";
 import type { AuthRequest } from "../middleware/auth.middleware";
 import * as ProjectService from "../services/project.service";
+import { reorderItemsSchema } from "../schemas/reorderSchema";
 
 const createProjectSchema = z.object({
   title: z.string().min(1),
@@ -73,6 +74,35 @@ export async function update(req: AuthRequest, res: Response): Promise<void> {
       return;
     }
     res.json({ success: true, data: updated });
+  } catch (err: any) {
+    if (err?.name === "ZodError") {
+      res.status(400).json({
+        success: false,
+        error: "Validation failed",
+        details: err.flatten().fieldErrors,
+      });
+      return;
+    }
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+}
+
+export async function reorder(req: AuthRequest, res: Response): Promise<void> {
+  try {
+    if (!req.userId) {
+      res.status(401).json({ success: false, error: "Unauthorized" });
+      return;
+    }
+    const { items } = reorderItemsSchema.parse(req.body);
+    const projects = await ProjectService.reorderProjects(req.userId, items);
+    if (projects.length === 0) {
+      res.status(400).json({
+        success: false,
+        error: "One or more projects were not found",
+      });
+      return;
+    }
+    res.json({ success: true, data: projects });
   } catch (err: any) {
     if (err?.name === "ZodError") {
       res.status(400).json({
