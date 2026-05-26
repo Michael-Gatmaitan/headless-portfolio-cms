@@ -40,7 +40,7 @@ export async function createProject(
   userId: string,
   data: Omit<NewProject, "id" | "userId" | "sortOrder">,
 ): Promise<Project> {
-  const sortOrder = nextSortOrder(await getLastProjectSortOrder(userId));
+  const sortOrder = await nextSortOrder(await getLastProjectSortOrder(userId));
   const [created] = await db
     .insert(projects)
     .values({ ...data, userId, sortOrder })

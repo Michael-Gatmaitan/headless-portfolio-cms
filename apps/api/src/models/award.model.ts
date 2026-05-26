@@ -40,7 +40,7 @@ export async function createAward(
   userId: string,
   data: Omit<NewAward, "id" | "userId" | "sortOrder">,
 ): Promise<Award> {
-  const sortOrder = nextSortOrder(await getLastAwardSortOrder(userId));
+  const sortOrder = await nextSortOrder(await getLastAwardSortOrder(userId));
   const [created] = await db
     .insert(awards)
     .values({ ...data, userId, sortOrder })

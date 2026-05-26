@@ -40,7 +40,7 @@ export async function createSkill(
   userId: string,
   data: Omit<NewSkill, "id" | "userId" | "sortOrder">,
 ): Promise<Skill> {
-  const sortOrder = nextSortOrder(await getLastSkillSortOrder(userId));
+  const sortOrder = await nextSortOrder(await getLastSkillSortOrder(userId));
   const [created] = await db
     .insert(skills)
     .values({ ...data, userId, sortOrder })
