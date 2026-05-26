@@ -1,6 +1,8 @@
 import { generateKeyBetween } from "fractional-indexing";
 
-export function nextSortOrder(lastSortOrder: string | null | undefined): string {
+export function nextSortOrder(
+  lastSortOrder: string | null | undefined,
+): string {
   return generateKeyBetween(lastSortOrder ?? null, null);
 }
 
