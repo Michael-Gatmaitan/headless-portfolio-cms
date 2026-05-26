@@ -2,10 +2,10 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createUser, findUserByEmail } from "../models/user.model";
 import { sign, verify, type SignOptions } from "jsonwebtoken";
-import { AuthResponse, LoginInput, User } from "@portfolio-types/shared";
+import { AuthResponse, LoginInput, RegisterInput, User } from "@portfolio-types/shared";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const JWT_SECRET = process.env.JWT_SECRET!;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN!;
 
 function formatUser(user: {
   id: string;
@@ -31,6 +31,27 @@ export async function loginUser(input: LoginInput): Promise<AuthResponse> {
   if (!valid) {
     throw new Error("Invalid email or password");
   }
+
+  const token = sign({ userId: user.id }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  } as SignOptions);
+
+  return { user: formatUser(user), token };
+}
+
+export async function signupUser(input: RegisterInput): Promise<AuthResponse> {
+  const existing = await findUserByEmail(input.email);
+  if (existing) {
+    throw new Error("An account with this email already exists");
+  }
+
+  const passwordHash = await bcrypt.hash(input.password, 10);
+
+  const user = await createUser({
+    name: input.name,
+    email: input.email,
+    passwordHash,
+  });
 
   const token = sign({ userId: user.id }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,

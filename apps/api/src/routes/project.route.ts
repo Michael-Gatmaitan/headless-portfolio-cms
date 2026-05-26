@@ -7,6 +7,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get("/", ProjectController.list);
+router.put("/reorder", ProjectController.reorder);
 router.get("/:id", ProjectController.get);
 router.post("/", ProjectController.create);
 router.put("/:id", ProjectController.update);

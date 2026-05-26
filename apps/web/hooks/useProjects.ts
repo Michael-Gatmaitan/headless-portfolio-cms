@@ -1,6 +1,11 @@
 "use client";
 
-import { createProject, updateProject, getProjects } from "@/services/projects";
+import {
+  createProject,
+  updateProject,
+  getProjects,
+  reorderProjects,
+} from "@/services/projects";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { AxiosError } from "axios";
@@ -9,7 +14,7 @@ import {
   EditProjectFormValues,
 } from "@/lib/zod-schemas/projects-schema";
 import { toast } from "sonner";
-import { Project } from "@portfolio-types/shared";
+import { Project, ReorderItem } from "@portfolio-types/shared";
 
 export const useProjects = () => {
   const { data: session } = useSession();
@@ -47,6 +52,22 @@ export const useCreateProject = () => {
     },
     onError: () => {
       toast.error("Failed to create project");
+    },
+  });
+};
+
+export const useReorderProjects = () => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: (items: ReorderItem[]) => reorderProjects(items),
+    onSuccess: (res) => {
+      queryClient.setQueryData(["projects", userId], res.data.data);
+    },
+    onError: () => {
+      toast.error("Failed to save project order");
     },
   });
 };

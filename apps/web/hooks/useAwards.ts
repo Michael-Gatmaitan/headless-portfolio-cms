@@ -9,10 +9,11 @@ import {
   createAward,
   deleteAward,
   getAwards,
+  reorderAwards,
   updateAward,
 } from "@/services/awards";
 import { CreateAwardFormValues } from "@/lib/zod-schemas/awards-schema";
-import { Award } from "@portfolio-types/shared";
+import { Award, ReorderItem } from "@portfolio-types/shared";
 
 export const useAwards = () => {
   const { data: session } = useSession();
@@ -37,6 +38,22 @@ export const useAwards = () => {
     },
     enabled: !!userId,
     retry: false,
+  });
+};
+
+export const useReorderAwards = () => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: (items: ReorderItem[]) => reorderAwards(items),
+    onSuccess: (res) => {
+      queryClient.setQueryData(["awards", userId], res.data.data);
+    },
+    onError: () => {
+      toast.error("Failed to save award order");
+    },
   });
 };
 

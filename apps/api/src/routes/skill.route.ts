@@ -7,6 +7,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get("/", SkillController.list);
+router.put("/reorder", SkillController.reorder);
 router.get("/:id", SkillController.get);
 router.post("/", SkillController.create);
 router.put("/:id", SkillController.update);

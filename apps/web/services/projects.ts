@@ -1,5 +1,6 @@
 import axios from "@/lib/axios";
 import { CreateProjectFormValues } from "@/lib/zod-schemas/projects-schema";
+import type { ReorderItem } from "@portfolio-types/shared";
 
 export const getProjects = () => {
   return axios.get("/api/projects");
@@ -19,4 +20,8 @@ export const updateProject = (id: string, data: any) => {
 
 export const deleteProject = (id: string) => {
   return axios.delete(`/api/projects/${id}`);
+};
+
+export const reorderProjects = (items: ReorderItem[]) => {
+  return axios.put("/api/projects/reorder", { items });
 };

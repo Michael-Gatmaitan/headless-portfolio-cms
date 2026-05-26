@@ -1,102 +1,64 @@
-"use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import { LoginInput } from "@portfolio-types/shared";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/lib/validations";
-import { Input } from "@/components/ui/input";
-import { Controller } from "react-hook-form";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
-import { useLogin } from "@/hooks/useLogin";
-import { signIn } from "next-auth/react";
+import LoginForm from "@/components/layout/(auth)/login/LoginForm";
+import ContinueUsingGoogleButton from "@/components/ContinueUsingGoogleButton";
+import { Metadata } from "next";
+import Image from "next/image";
 
-const LoginPage = () => {
-  const { mutate: login, isPending } = useLogin();
+export const metadata: Metadata = {
+  title: "Login",
+};
 
-  const form = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  async function onSubmit(data: LoginInput) {
-    login(data);
-  }
-
+const page = () => {
   return (
-    <div>
-      <div className="flex items-center justify-center">
-        <div className="text-2xl text-center max-w-3xs font-bold">
-          Hello, ready to add something today?
+    <div className="grid gap-4 lg:grid-cols-2 lg:h-full lg:min-h-0 lg:flex-1 lg:pb-8">
+      <div className="w-full lg:h-full lg:px-24">
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <div>Logo</div>
+            <div className="font-bold text-3xl">Sign in</div>
+          </div>
+
+          <div>
+            <LoginForm />
+          </div>
+
+          <ContinueUsingGoogleButton />
         </div>
       </div>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <FieldGroup className="gap-4">
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  {...field}
-                  name={field.name}
-                  id="email"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
 
-          <Controller
-            name="password"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
-                  {...field}
-                  name={field.name}
-                  type="password"
-                  id="password"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-        </FieldGroup>
+      <div className="hidden min-h-0 w-full rounded-2xl bg-primary lg:flex lg:h-full p-4">
+        <div className="w-full h-full bg-background rounded-xl overflow-hidden p-12">
+          <div className="space-y-4">
+            <div>
+              <Image
+                src="/logo-cropped.png"
+                width={200}
+                height={200}
+                alt="logo"
+              />
+            </div>
 
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? "Signing in…" : "Sign In"}
-        </Button>
-        <Button
-          type="button"
-          onClick={async () => {
-            const result = await signIn("google", {
-              callbackUrl: "/dashboard",
-            });
-          }}
-        >
-          Google
-        </Button>
-      </form>
+            <div>
+              <Image
+                src="/logo-text.png"
+                width={100}
+                height={100}
+                alt="logo-text"
+              />
+            </div>
+          </div>
+
+          <div className="mt-12 space-y-2">
+            <h1 className="font-bold text-3xl">Welcome to fetchfolio</h1>
+            <p className="font-mono">
+              Where developers can manage their portfolio data without updating
+              it manually in their codebase using API keys.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default page;

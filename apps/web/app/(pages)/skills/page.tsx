@@ -14,7 +14,6 @@ const page = () => {
         <AddSkillDialog />
       </div>
 
-      {/* Display skills */}
       <DisplaySkills />
     </div>
   );

@@ -4,12 +4,13 @@ import {
   createSkill,
   deleteSkill,
   getSkills,
+  reorderSkills,
   updateSkill,
 } from "@/services/skills";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { AxiosError } from "axios";
-import { Skill } from "@portfolio-types/shared";
+import { ReorderItem, Skill } from "@portfolio-types/shared";
 import { CreateSkillFormValues } from "@/lib/zod-schemas/skills-schema";
 import { toast } from "sonner";
 
@@ -33,6 +34,22 @@ export const useSkills = () => {
     },
     enabled: !!userId,
     retry: false,
+  });
+};
+
+export const useReorderSkills = () => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: (items: ReorderItem[]) => reorderSkills(items),
+    onSuccess: (res) => {
+      queryClient.setQueryData(["skills", userId], res.data.data);
+    },
+    onError: () => {
+      toast.error("Failed to save skill order");
+    },
   });
 };
 

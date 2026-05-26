@@ -14,6 +14,7 @@ export interface Project {
   url: string;
   github: string;
   dateRange: string;
+  sortOrder: string;
 }
 
 export interface Skill {
@@ -21,6 +22,7 @@ export interface Skill {
   userId: string;
   title: string;
   tags: string[];
+  sortOrder: string;
 }
 
 export interface Award {
@@ -32,6 +34,12 @@ export interface Award {
   longDescription: string;
   year: string;
   tags: string[];
+  sortOrder: string;
+}
+
+export interface ReorderItem {
+  id: string;
+  sortOrder: string;
 }
 
 // Input Types

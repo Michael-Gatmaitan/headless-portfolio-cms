@@ -28,6 +28,7 @@ export const projects = pgTable("projects", {
   url: varchar("url", { length: 255 }).notNull(),
   github: varchar("github", { length: 255 }).notNull(),
   dateRange: varchar("date_range", { length: 255 }).notNull(),
+  sortOrder: varchar("sort_order", { length: 255 }).notNull(),
   ...timestamps,
   // Todo: Image placeholder
 
@@ -41,6 +42,7 @@ export const skills = pgTable("skills", {
     .references(() => users.id, { onDelete: "cascade" }),
   title: varchar("title", { length: 255 }).notNull(),
   tags: text("tags").array().notNull().default([]),
+  sortOrder: varchar("sort_order", { length: 255 }).notNull(),
   ...timestamps,
 });
 
@@ -55,6 +57,7 @@ export const awards = pgTable("awards", {
   longDescription: varchar("long_description").notNull(),
   year: text("year").notNull(),
   tags: text("tags").array().notNull().default([]),
+  sortOrder: varchar("sort_order", { length: 255 }).notNull(),
   ...timestamps,
   // Todo: Image placeholder
 });
