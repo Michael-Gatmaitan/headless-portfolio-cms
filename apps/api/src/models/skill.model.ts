@@ -62,14 +62,14 @@ export async function reorderSkills(
     return [];
   }
 
-  await db.transaction(async (tx) => {
-    for (const item of items) {
-      await tx
+  await Promise.all(
+    items.map((item) =>
+      db
         .update(skills)
         .set({ sortOrder: item.sortOrder })
-        .where(and(eq(skills.userId, userId), eq(skills.id, item.id)));
-    }
-  });
+        .where(and(eq(skills.userId, userId), eq(skills.id, item.id)))
+    )
+  );
 
   return listSkillsByUser(userId);
 }

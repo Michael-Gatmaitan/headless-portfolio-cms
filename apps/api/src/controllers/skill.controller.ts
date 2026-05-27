@@ -112,7 +112,9 @@ export async function reorder(req: AuthRequest, res: Response): Promise<void> {
       });
       return;
     }
-    res.status(500).json({ success: false, error: "Internal server error" });
+    res
+      .status(500)
+      .json({ success: false, error: "Internal server error: " + err });
   }
 }
 

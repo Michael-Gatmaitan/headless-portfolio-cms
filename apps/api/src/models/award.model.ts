@@ -62,14 +62,14 @@ export async function reorderAwards(
     return [];
   }
 
-  await db.transaction(async (tx) => {
-    for (const item of items) {
-      await tx
+  await Promise.all(
+    items.map((item) =>
+      db
         .update(awards)
         .set({ sortOrder: item.sortOrder })
-        .where(and(eq(awards.userId, userId), eq(awards.id, item.id)));
-    }
-  });
+        .where(and(eq(awards.userId, userId), eq(awards.id, item.id)))
+    )
+  );
 
   return listAwardsByUser(userId);
 }
