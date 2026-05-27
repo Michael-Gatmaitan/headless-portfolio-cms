@@ -54,8 +54,9 @@ export async function create(req: AuthRequest, res: Response): Promise<void> {
       return;
     }
 
-    console.log(err);
-    res.status(500).json({ success: false, error: "Internal server error" });
+    res
+      .status(500)
+      .json({ success: false, error: `Internal server error: ${err}` });
   }
 }
 
