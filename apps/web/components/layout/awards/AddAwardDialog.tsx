@@ -17,7 +17,15 @@ import { useState } from "react";
 import AddAwardForm from "./AddAwardForm";
 import { Pencil, Plus } from "lucide-react";
 
-const AddAwardDialog = ({ award }: { award?: Award }) => {
+const AddAwardDialog = ({
+  award,
+  variant,
+  size,
+}: {
+  award?: Award
+  variant?: "outline" | "default";
+  size?: "sm" | "lg";
+}) => {
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -25,8 +33,8 @@ const AddAwardDialog = ({ award }: { award?: Award }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          size={award ? "sm" : "lg"}
-          variant={award ? "outline" : "default"}
+          size={award ? "sm" : size ? size : "lg"}
+          variant={award ? "outline" : variant ? variant : "default"}
           className="flex gap-2"
         >
           {award ? <Pencil /> : <Plus />} {award ? "Edit" : "Add"} Award

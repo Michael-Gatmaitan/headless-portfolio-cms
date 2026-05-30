@@ -25,7 +25,7 @@ const EditProjectDialog = ({ project }: { project: Project }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button size="sm" variant="outline">
           <Pencil /> Edit
         </Button>
       </DialogTrigger>

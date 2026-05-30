@@ -5,7 +5,7 @@ import * as ApiKeyService from "../services/apiKey.service";
 
 const createKeySchema = z.object({
   name: z.string().min(1, "Name is required").max(255),
-  expiresAt: z.iso.datetime().nullable().optional(), // ISO-8601 string, optional
+  expiresAt: z.iso.datetime().nullable().optional(),
 });
 
 export async function create(req: AuthRequest, res: Response): Promise<void> {
@@ -51,7 +51,6 @@ export async function list(req: AuthRequest, res: Response): Promise<void> {
   res.json({ success: true, data: keys });
 }
 
-
 export async function revoke(req: AuthRequest, res: Response): Promise<void> {
   if (!req.userId) {
     res.status(401).json({ success: false, error: "Unauthorized" });
@@ -69,7 +68,10 @@ export async function revoke(req: AuthRequest, res: Response): Promise<void> {
   res.json({ success: true, data: revoked });
 }
 
-export async function bulkRevoke(req: AuthRequest, res: Response): Promise<void> {
+export async function bulkRevoke(
+  req: AuthRequest,
+  res: Response,
+): Promise<void> {
   if (!req.userId) {
     res.status(401).json({ success: false, error: "Unauthorized" });
     return;
@@ -96,4 +98,3 @@ export async function bulkRevoke(req: AuthRequest, res: Response): Promise<void>
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 }
-

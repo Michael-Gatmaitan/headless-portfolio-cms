@@ -62,6 +62,8 @@ export const useCreateSkill = () => {
     mutationFn: (skill: CreateSkillFormValues) => createSkill(skill),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["skills", userId] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats", userId] });
+
       toast.success("Skill created successfully");
     },
     onError: () => {

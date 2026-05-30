@@ -1,26 +1,26 @@
-"use client";
 
-import { useSkills } from "@/hooks/useSkills";
+import AddAwardDialog from "@/components/layout/awards/AddAwardDialog";
+import DashboardStats from "@/components/layout/dashboard/DashboardStats";
+import AddProjectDialog from "@/components/layout/projects/AddProjectDialog";
+import AddSkillDialog from "@/components/layout/skills/AddSkillDialog";
 
-const Page = () => {
-  const { data: skills = [], isLoading: skillsLoading } = useSkills();
+const page = () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      {skillsLoading ? (
-        <p>Loading skills...</p>
-      ) : !skills ? (
-        <p>No skills found.</p>
-      ) : (
-        <ul>
-          {skills.map((skill) => (
-            <li key={skill.id}>{skill.title}</li>
-          ))}
-        </ul>
-      )}
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-semibold">Your dashboard</h1>
+
+        <div className="hidden lg:flex gap-2">
+          <AddProjectDialog variant="outline" size="sm" />
+          <AddSkillDialog variant="outline" size="sm" />
+          <AddAwardDialog variant="outline" size="sm" />
+        </div>
+      </div>
+
+      <DashboardStats />
     </div>
   );
 };
 
-export default Page;
+export default page;

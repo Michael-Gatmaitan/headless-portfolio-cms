@@ -9,6 +9,7 @@ import skillRoutes from "./routes/skill.route";
 import awardRoutes from "./routes/award.route";
 import apiKeyRoutes from "./routes/apiKey.routes";
 import publicRoutes from "./routes/public.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/api/projects", cmsCors, projectRoutes);
 app.use("/api/skills", cmsCors, skillRoutes);
 app.use("/api/awards", cmsCors, awardRoutes);
 app.use("/api/api-keys", cmsCors, apiKeyRoutes);
+app.use("/api/dashboard", cmsCors, dashboardRoutes);
 
 app.use("/public/v1", publicCors, publicRateLimit, publicRoutes);
 

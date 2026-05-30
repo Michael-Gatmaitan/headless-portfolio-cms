@@ -5,6 +5,7 @@ import {
   updateProject,
   getProjects,
   reorderProjects,
+  deleteProject,
 } from "@/services/projects";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -48,6 +49,7 @@ export const useCreateProject = () => {
     mutationFn: (project: CreateProjectFormValues) => createProject(project),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats", userId] });
       toast.success("Project created successfully");
     },
     onError: () => {
@@ -86,6 +88,23 @@ export const useEditProject = () => {
     },
     onError: () => {
       toast.error("Failed to update project");
+    },
+  });
+};
+
+export const useDeleteProjects = () => {
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  return useMutation({
+    mutationFn: (id: string) => deleteProject(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      toast.success("Project deleted successfully");
+    },
+    onError: () => {
+      toast.error("Failed to delete project");
     },
   });
 };

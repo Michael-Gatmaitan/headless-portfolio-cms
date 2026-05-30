@@ -17,7 +17,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import AddSkillForm from "./AddSkillForm";
 import { Skill } from "@portfolio-types/shared";
 
-const AddSkillDialog = ({ skill }: { skill?: Skill }) => {
+const AddSkillDialog = ({
+  skill,
+  variant = "default",
+  size = "lg",
+}: {
+  skill?: Skill;
+  variant?: "outline" | "default";
+  size?: "sm" | "lg";
+}) => {
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -25,8 +33,8 @@ const AddSkillDialog = ({ skill }: { skill?: Skill }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          size={skill ? "sm" : "lg"}
-          variant={skill ? "outline" : "default"}
+          size={skill ? "sm" : size ? size : "lg"}
+          variant={skill ? "outline" : variant ? variant : "default"}
           className="flex gap-2"
         >
           {skill ? <Pencil /> : <Plus />} {skill ? "Edit" : "Add"} Skill
