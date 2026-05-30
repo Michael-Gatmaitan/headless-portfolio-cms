@@ -50,12 +50,7 @@ const items = [
     title: "API Keys",
     url: "/api-keys",
     icon: Key,
-  },
-  {
-    title: "Testing",
-    url: "/testing",
-    icon: TestTube,
-  },
+  }
 ];
 
 const AuthenticatedSidebarGroup = () => {
