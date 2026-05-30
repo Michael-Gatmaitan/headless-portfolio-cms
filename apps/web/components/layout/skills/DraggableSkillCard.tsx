@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { shouldSwapOnHover } from "@/lib/dndHover";
 import AddSkillDialog from "./AddSkillDialog";
 import DeleteSkillDialog from "./DeleteSkillDialog";
+import { Button } from "@/components/ui/button";
 
 export const SKILL_DRAG_TYPE = "SKILL";
 
@@ -99,7 +100,9 @@ const DraggableSkillCard = ({
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             type="button"
             ref={(node) => {
               drag(node);
@@ -108,7 +111,7 @@ const DraggableSkillCard = ({
             aria-label={`Drag to reorder ${skill.title}`}
           >
             <GripVertical className="size-5" />
-          </button>
+          </Button>
           <span className="text-xs text-muted-foreground">Drag to reorder</span>
         </div>
 

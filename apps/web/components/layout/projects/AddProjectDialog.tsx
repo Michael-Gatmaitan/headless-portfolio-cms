@@ -16,14 +16,20 @@ import AddProjectForm from "./AddProjectForm";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const AddProjectDialog = () => {
+const AddProjectDialog = ({
+  variant = "default",
+  size = "lg",
+}: {
+  variant?: "outline" | "default";
+  size?: "sm" | "lg";
+}) => {
   const [open, setOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="lg" className="flex gap-2">
+        <Button size={size} variant={variant} className="flex gap-2">
           <Plus /> Add Project
         </Button>
       </DialogTrigger>

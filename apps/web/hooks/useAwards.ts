@@ -84,6 +84,7 @@ export const useUpdateAward = () => {
       updateAward(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["awards", userId] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats", userId] });
       toast.success("Award updated successfully");
     },
     onError: () => {

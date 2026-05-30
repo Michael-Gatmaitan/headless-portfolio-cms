@@ -9,6 +9,8 @@ import { GripVertical } from "lucide-react";
 import EditProjectDialog from "./EditProjectDialog";
 import { cn } from "@/lib/utils";
 import { shouldSwapOnHover } from "@/lib/dndHover";
+import DeleteProjectDialog from "./DeleteProjectDialog";
+import { Button } from "@/components/ui/button";
 
 export const PROJECT_DRAG_TYPE = "PROJECT";
 
@@ -91,7 +93,9 @@ const DraggableProjectCard = ({
       )}
     >
       <div className="flex items-center gap-2">
-        <button
+        <Button
+          size="sm"
+          variant="ghost"
           type="button"
           ref={(node) => {
             drag(node);
@@ -100,7 +104,7 @@ const DraggableProjectCard = ({
           aria-label={`Drag to reorder ${project.title}`}
         >
           <GripVertical className="size-5" />
-        </button>
+        </Button>
         <span className="text-xs text-muted-foreground">Drag to reorder</span>
       </div>
 
@@ -132,7 +136,10 @@ const DraggableProjectCard = ({
           </div>
         </Link>
 
-        <EditProjectDialog project={project} />
+        <div className="flex gap-2">
+          <EditProjectDialog project={project} />
+          <DeleteProjectDialog project={project} />
+        </div>
       </div>
     </div>
   );

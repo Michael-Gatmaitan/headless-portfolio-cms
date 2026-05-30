@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { imageKitFolders, uploadImageToImageKit } from "@/lib/imagekit";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 const AddAwardForm = ({
   mode,
@@ -317,7 +318,8 @@ const AddAwardForm = ({
                   placeholder="Type a tag and click Add"
                   aria-invalid={fieldState.invalid}
                 />
-                <button
+                <Button
+                  variant="outline"
                   type="button"
                   onClick={addTag}
                   style={{
@@ -332,7 +334,7 @@ const AddAwardForm = ({
                   }}
                 >
                   Add
-                </button>
+                </Button>
               </div>
 
               {/* Tag chips */}
@@ -361,7 +363,8 @@ const AddAwardForm = ({
                       }}
                     >
                       {tag}
-                      <button
+                      <Button
+                        variant="outline"
                         type="button"
                         aria-label={`Remove tag ${tag}`}
                         onClick={() => removeTag(tag)}
@@ -376,7 +379,7 @@ const AddAwardForm = ({
                         }}
                       >
                         ×
-                      </button>
+                      </Button>
                     </span>
                   ))}
                 </div>

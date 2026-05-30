@@ -9,6 +9,7 @@ import { shouldSwapOnHover } from "@/lib/dndHover";
 import { Badge } from "@/components/ui/badge";
 import AddAwardDialog from "./AddAwardDialog";
 import DeleteAwardDialog from "./DeleteAwardDialog";
+import { Button } from "@/components/ui/button";
 
 export const AWARD_DRAG_TYPE = "AWARD";
 
@@ -98,7 +99,9 @@ const DraggableAwardCard = ({
       )}
     >
       <div className="flex items-center gap-2">
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           type="button"
           ref={(node) => {
             drag(node);
@@ -107,7 +110,7 @@ const DraggableAwardCard = ({
           aria-label={`Drag to reorder ${award.title}`}
         >
           <GripVertical className="size-5" />
-        </button>
+        </Button>
         <span className="text-xs text-muted-foreground">Drag to reorder</span>
       </div>
 
