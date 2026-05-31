@@ -40,9 +40,9 @@ export default function RootLayout({
         <SessionProvider>
           <Providers>
             <AppSidebar />
-            <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex min-w-0 min-h-0 flex-1 flex-col">
               <AppNav />
-              <main className="flex min-h-0 flex-1 flex-col px-4 py-2">
+              <main className="flex min-w-0 min-h-0 flex-1 flex-col px-4 py-2">
                 {children}
               </main>
             </div>

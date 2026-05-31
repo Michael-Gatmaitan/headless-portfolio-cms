@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { File, Settings } from "lucide-react";
 import { User } from "@portfolio-types/shared";
 import { auth } from "@/lib/auth";
 import AvatarUserProfilePicture from "./layout/dashboard/AvatarUserProfilePicture";
@@ -32,6 +32,22 @@ const AppSidebar = async () => {
       </SidebarHeader>
 
       <SidebarContent>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Getting started</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="grid gap-1">
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/docs">
+                    <File />
+                    <span>Documentation</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
         {session?.user ? <AuthenticatedSidebarGroup /> : null}
 
         <SidebarGroup>
