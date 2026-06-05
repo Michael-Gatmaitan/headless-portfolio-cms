@@ -100,3 +100,40 @@ export interface AuthResponse {
   user: User;
   token: string;
 }
+
+export interface Job {
+  id: string;
+  userId: string;
+  companyName: string;
+  role: string;
+  location: string | undefined;
+  salaryRange: string | undefined;
+  status: string;
+  notes: string | undefined;
+  platform: string | undefined;
+  dateApplied: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateJobInput {
+  companyName: string;
+  role: string;
+  location?: string;
+  salaryRange?: string;
+  status: string;
+  notes?: string;
+  platform?: string;
+  dateApplied?: string;
+}
+
+export interface UpdateJobInput {
+  companyName?: string;
+  role?: string;
+  location?: string;
+  salaryRange?: string;
+  status?: string;
+  notes?: string;
+  platform?: string;
+  dateApplied?: string;
+}
