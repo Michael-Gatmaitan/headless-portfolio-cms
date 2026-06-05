@@ -132,7 +132,7 @@ const DraggableProjectCard = ({
         >
           <div className="font-bold text-xl hover:underline">{project.title}</div>
           <div className="font-medium text-gray-600 dark:text-gray-300">
-            {project.description}
+            {project.dateRange}
           </div>
         </Link>
 
