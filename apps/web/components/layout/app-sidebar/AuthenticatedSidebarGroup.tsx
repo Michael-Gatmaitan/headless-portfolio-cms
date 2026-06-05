@@ -11,12 +11,10 @@ import {
 import Link from "next/link";
 import {
   LayoutDashboardIcon,
-  UserIcon,
   FolderIcon,
   Wrench,
   Award,
   Key,
-  TestTube,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -25,11 +23,6 @@ const items = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboardIcon,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: UserIcon,
   },
   {
     title: "Projects",

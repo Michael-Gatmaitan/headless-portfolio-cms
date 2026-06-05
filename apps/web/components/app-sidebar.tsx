@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,17 +13,17 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import Link from "next/link";
-import { File, Settings } from "lucide-react";
+import { File } from "lucide-react";
 import { User } from "@portfolio-types/shared";
-import { auth } from "@/lib/auth";
 import AvatarUserProfilePicture from "./layout/dashboard/AvatarUserProfilePicture";
 import SidebarHeaderMenuItem from "./layout/app-sidebar/SidebarHeaderMenuItem";
 import AuthenticatedSidebarGroup from "./layout/app-sidebar/AuthenticatedSidebarGroup";
 import LogoutButton from "./layout/app-sidebar/LogoutButton";
 import LoginButton from "./layout/app-sidebar/LoginButton";
+import { useSession } from "next-auth/react";
 
-const AppSidebar = async () => {
-  const session = await auth();
+const AppSidebar = () => {
+  const { data: session } = useSession();
 
   return (
     <Sidebar collapsible="icon">
@@ -32,7 +34,6 @@ const AppSidebar = async () => {
       </SidebarHeader>
 
       <SidebarContent>
-
         <SidebarGroup>
           <SidebarGroupLabel>Getting started</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -53,15 +54,6 @@ const AppSidebar = async () => {
         <SidebarGroup>
           <SidebarGroupLabel>Other</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="grid gap-1">
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Settings />
-                  <span>Settings</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-
             {!session?.user ? (
               <SidebarMenu className="grid gap-1">
                 <SidebarMenuItem>
@@ -88,19 +80,17 @@ const AppSidebar = async () => {
               asChild
             >
               {session?.user ? (
-                <Link href="/profile">
-                  <div className="flex flex-1 items-center gap-2">
-                    <AvatarUserProfilePicture user={session.user as User} />
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-medium">
-                        {session?.user.name}
-                      </span>
-                      <span className="truncate text-xs">
-                        {session?.user.email}
-                      </span>
-                    </div>
+                <div className="flex flex-1 items-center gap-2">
+                  <AvatarUserProfilePicture user={session.user as User} />
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-medium">
+                      {session?.user.name}
+                    </span>
+                    <span className="truncate text-xs">
+                      {session?.user.email}
+                    </span>
                   </div>
-                </Link>
+                </div>
               ) : (
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
