@@ -76,11 +76,28 @@ export const apiKeys = pgTable("api_keys", {
   ...timestamps,
 });
 
+export const jobs = pgTable("jobs", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  companyName: varchar("company_name", { length: 255 }).notNull(),
+  role: varchar("role", { length: 255 }).notNull(),
+  location: varchar("location", { length: 255 }),
+  salaryRange: varchar("salary_range", { length: 255 }),
+  status: varchar("status", { length: 255 }).notNull(),
+  notes: text("notes"),
+  platform: varchar("platform", { length: 255 }),
+  dateApplied: timestamp("date_applied").defaultNow().notNull(),
+  ...timestamps,
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   projects: many(projects),
   skills: many(skills),
   awards: many(awards),
   apiKeys: many(apiKeys),
+  jobs: many(jobs),
 }));
 
 export const projectsRelations = relations(projects, ({ one }) => ({
@@ -98,3 +115,8 @@ export const awardsRelations = relations(awards, ({ one }) => ({
 export const apiKeysRelations = relations(apiKeys, ({ one }) => ({
   user: one(users, { fields: [apiKeys.userId], references: [users.id] }),
 }));
+
+export const jobsRelations = relations(jobs, ({ one }) => ({
+  user: one(users, { fields: [jobs.userId], references: [users.id] }),
+}));
+

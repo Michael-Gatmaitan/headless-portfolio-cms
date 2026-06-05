@@ -12,7 +12,7 @@ const AppNav = () => {
   const title = (pathname.charAt(1).toUpperCase() + pathname.slice(2)).replace(
     "/",
     " -> ",
-  );
+  ).replace("-", " ");
 
   return (
     <nav className="p-4 flex justify-between items-center">

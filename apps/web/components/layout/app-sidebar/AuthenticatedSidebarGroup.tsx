@@ -15,6 +15,7 @@ import {
   Wrench,
   Award,
   Key,
+  Briefcase,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -43,6 +44,11 @@ const items = [
     title: "API Keys",
     url: "/api-keys",
     icon: Key,
+  },
+  {
+    title: "Job Tracker",
+    url: "/job-tracker",
+    icon: Briefcase,
   }
 ];
 
