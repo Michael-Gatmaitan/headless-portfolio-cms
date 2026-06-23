@@ -22,7 +22,7 @@ const page = () => {
         />
 
         <div className="font-mono">
-          Manage your portfolio's content so you don't have to :&gt;
+          Manage your portfolio&apos;s content so you don&apos;t have to :&gt;
         </div>
 
         <HomePageButtons />

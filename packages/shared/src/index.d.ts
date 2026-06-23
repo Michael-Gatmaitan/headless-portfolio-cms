@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   createdAt: string;
+  accessToken?: string;
+  expiresAt?: number;
 }
 
 export interface Project {

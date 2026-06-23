@@ -11,7 +11,7 @@ const LogoutButton = () => {
       <Button
         variant="destructive"
         size="sm"
-        className="w-full"
+        // className="w-full"
         onClick={() => signOut()}
       >
         <LogOut />

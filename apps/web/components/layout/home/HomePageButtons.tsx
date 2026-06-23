@@ -1,11 +1,11 @@
 "use client";
 
-import ContinueUsingGoogleButton from '@/components/ContinueUsingGoogleButton';
-import { Button } from '@/components/ui/button';
-import { Coffee, File, LayoutDashboard } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import React from 'react'
+import ContinueUsingGoogleButton from "@/components/ContinueUsingGoogleButton";
+import { Button } from "@/components/ui/button";
+import { Coffee, File, LayoutDashboard } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import React from "react";
 
 const HomePageButtons = () => {
   const { data: session } = useSession();
@@ -24,7 +24,10 @@ const HomePageButtons = () => {
           <ContinueUsingGoogleButton />
         )}
         <Button variant="ghost" asChild>
-          <Link href="https://buymeacoffee.com/michaelgatmaitan">
+          <Link
+            href="https://buymeacoffee.com/michaelgatmaitan"
+            target="_blank"
+          >
             <Coffee />
             Buy me a coffee
           </Link>
@@ -32,7 +35,7 @@ const HomePageButtons = () => {
       </div>
 
       <div className="flex justify-center">
-        <Button variant="outline" className='w-fit' asChild>
+        <Button variant="outline" className="w-fit" asChild>
           <Link href="/docs">
             <File />
             Get started
@@ -40,7 +43,7 @@ const HomePageButtons = () => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomePageButtons
+export default HomePageButtons;

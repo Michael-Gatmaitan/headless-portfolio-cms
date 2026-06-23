@@ -4,6 +4,18 @@ import Google from "next-auth/providers/google";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
+function parseJwt(token: string) {
+  try {
+    // Next.js Edge supports standard atob
+    const base64Url = token.split(".")[1];
+    if (!base64Url) return null;
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(atob(base64));
+  } catch (e) {
+    return null;
+  }
+}
+
 const nextAuth: NextAuthResult = NextAuth({
   // adapter: DrizzleAdapter
   providers: [
@@ -33,8 +45,6 @@ const nextAuth: NextAuthResult = NextAuth({
           const json = await res.json();
           if (!res.ok || !json.success) return null;
 
-          console.log("Login backend response: ", json);
-
           return {
             id: json.data.user.id,
             name: json.data.user.name,
@@ -49,35 +59,46 @@ const nextAuth: NextAuthResult = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      if (account?.provider === "google" && user) {
-        console.log("Signing in using google");
-        try {
-          const res = await fetch(`${API_URL}/api/auth/google`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: user.email,
-              name: user.name || "Google User",
-            }),
-          });
-          const json = await res.json();
-          if (res.ok && json.success) {
-            token.id = json.data.user.id;
-            token.accessToken = json.data.token;
+      if (user) {
+        let backendToken = user.accessToken as string;
+
+        if (account?.provider === "google") {
+          try {
+            const res = await fetch(`${API_URL}/api/auth/google`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: user.email,
+                name: user.name || "Google User",
+              }),
+            });
+            const json = await res.json();
+            if (res.ok && json.success) {
+              token.id = json.data.user.id;
+              backendToken = json.data.token;
+            }
+          } catch (error) {
+            console.error("Google backend auth error:", error);
           }
-        } catch (error) {
-          console.error("Google backend auth error:", error);
+        } else if (user) {
+          token.id = user.id;
         }
-      } else if (user) {
-        token.id = user.id;
-        token.accessToken = (user as any).accessToken;
+
+        const decoded = parseJwt(backendToken);
+        token.accessToken = backendToken;
+
+        token.expiresAt = decoded?.exp
+          ? decoded.exp * 1000
+          : Date.now() + 1000 * 60 * 60;
       }
+
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
-        (session as any).accessToken = token.accessToken;
+        session.accessToken = token.accessToken as string;
+        session.expiresAt = token.expiresAt as number;
       }
       return session;
     },

@@ -21,6 +21,7 @@ import AuthenticatedSidebarGroup from "./layout/app-sidebar/AuthenticatedSidebar
 import LogoutButton from "./layout/app-sidebar/LogoutButton";
 import LoginButton from "./layout/app-sidebar/LoginButton";
 import { useSession } from "next-auth/react";
+import { ThemeToggle } from "./theme-toggle";
 
 const AppSidebar = () => {
   const { data: session } = useSession();
@@ -61,7 +62,10 @@ const AppSidebar = () => {
                 </SidebarMenuItem>
               </SidebarMenu>
             ) : (
-              <SidebarMenu className="grid gap-1">
+              <SidebarMenu className="flex gap-1">
+                <SidebarMenuItem>
+                  <ThemeToggle />
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <LogoutButton />
                 </SidebarMenuItem>
