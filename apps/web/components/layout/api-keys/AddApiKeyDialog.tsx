@@ -22,8 +22,18 @@ const AddApiKeyDialog = () => {
   const [open, setOpen] = useState(false);
   const [apiKeyResponse, setApiKeyResponse] = useState<ApiKeyResponseType>();
 
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+
+    if (!open) {
+      if (apiKeyResponse) {
+        setApiKeyResponse(undefined);
+      }
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size="lg" className="flex items-center gap-2">
           <Plus size={20} />
@@ -59,7 +69,7 @@ const AddApiKeyDialog = () => {
           ) : (
             <>
               <DialogClose asChild>
-                <Button variant="outline">Close</Button>
+                <Button variant="outline">Close x</Button>
               </DialogClose>
               <Button
                 onClick={() => {
